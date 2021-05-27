@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Director;
+import com.example.demo.entity.Performance;
 import com.example.demo.serice.DirectorService;
+import com.example.demo.serice.PerformanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +21,28 @@ public class DirectorController {
     @Autowired
     DirectorService directorService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Qualifier("performanceServiceImpl")
+    @Autowired
+    PerformanceService performanceService;
+
+
+    @RequestMapping(value = "/director/performance/{pName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Director> getDirectorByPerformance(@PathVariable("pName") String pName) {
+        if (pName == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Director director = this.performanceService.findByName(pName).getDirector();
+
+
+        if (pName == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        director.toString();
+        return new ResponseEntity<>(director, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/director", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = "experience")
     public ResponseEntity<Director> getDirectorByExperience(@RequestParam("experience") String experience) {
         if (experience == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -74,7 +97,7 @@ public class DirectorController {
     }
 
     @RequestMapping(value = "/directors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Director>>getAllDirectors() {
+    public ResponseEntity<List<Director>> getAllDirectors() {
         List<Director> directors = this.directorService.findAll();
 
         if (directors.isEmpty()) {

@@ -15,6 +15,7 @@ public class Performance {
 
     @ManyToOne
     @JoinColumn(name = "id_director", referencedColumnName = "id")
+    //@JsoneIgnoreProperties("performances")
     private Director director;
 
     @ManyToOne

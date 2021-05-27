@@ -18,6 +18,12 @@ public class PerformanceServiceImpl implements PerformanceService {
         return performanceRepo.findPerformanceByDate(date);
     }
 
+
+    @Override
+    public Performance findByName(String name) {
+        return performanceRepo.findPerformanceByName(name);
+    }
+
     @Override
     public void save(Performance performance) {
         performanceRepo.save(performance);
